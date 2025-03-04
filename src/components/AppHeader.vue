@@ -20,6 +20,7 @@ route.beforeEach((to, _, next) => {
 
 <template>
   <v-app-bar class="px-3">
+    <v-icon>mdi-package-variant-closed</v-icon>
     <v-app-bar-title>Inventory Manager</v-app-bar-title>
     <v-spacer></v-spacer>
     <v-btn-toggle v-model="nameOption" rounded="0" group>
