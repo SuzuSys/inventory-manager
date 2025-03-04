@@ -1,25 +1,29 @@
 <script lang="ts" setup>
 import { db } from "@/db";
 
-db.inventory.clear();
+interface Item {
+  name: string;
+  directory: string;
+  expiration: string | undefined;
+  registration: string;
+}
 
 async function getAll() {
-  console.log(await db.inventory.toArray());
+  const raw = await db.inventory.toArray();
+  return raw.map((inv) => ({
+    name: inv.name,
+    directory: inv.directory,
+    expiration: inv.expirationDate?.toISOString(),
+    registration: inv.registrationDate.toISOString(),
+  }));
 }
 
-getAll();
-
-async function addItem() {
-  const id = await db.inventory.add({
-    directory: "/",
-    name: "shldered",
-    registrationDate: new Date(),
-    expirationDate: null,
-  });
-  console.log(id);
-}
-
-addItem();
+let items: Item[] = [];
+(async () => {
+  items = await getAll();
+})();
 </script>
 
-<template></template>
+<template>
+  <v-data-table :items="items"></v-data-table>
+</template>

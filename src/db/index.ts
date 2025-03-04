@@ -6,6 +6,7 @@ interface Inventory {
   name: string;
   registrationDate: Date;
   expirationDate: Date | null;
+  isFolder: boolean;
 }
 
 const db = new Dexie("Inventory") as Dexie & {
