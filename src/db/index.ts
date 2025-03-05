@@ -4,18 +4,18 @@ interface Inventory {
   id: number;
   directory: string; // "/", "/冷蔵庫/"
   name: string;
-  registrationDate: Date;
-  expirationDate: Date | null;
-  isFolder: number; // 0 or 1
+  registredAt: Date;
+  expiresAt: Date; // Date(0) means null
+  contentAddedAt: Date; // Date(0) means null
 }
 
 const db = new Dexie("Inventory") as Dexie & {
   inventory: EntityTable<Inventory, "id">;
 };
 
-db.version(5).stores({
+db.version(6).stores({
   inventory:
-    "++id, isFolder, &[directory+name], name, registrationDate, expirationDate",
+    "++id, &[directory+name], name, expirationDate, contentAddedAt, registrationDate",
 });
 
 export type { Inventory };
