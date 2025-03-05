@@ -30,6 +30,9 @@ route.beforeEach((to, _, next) => {
       <v-btn value="Directory" @click="$router.push('/Directory')">
         Directory
       </v-btn>
+      <v-btn value="Operation" @click="$router.push('/Operation')">
+        Operation
+      </v-btn>
     </v-btn-toggle>
   </v-app-bar>
 </template>
