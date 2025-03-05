@@ -6,15 +6,16 @@ interface Inventory {
   name: string;
   registrationDate: Date;
   expirationDate: Date | null;
-  isFolder: boolean;
+  isFolder: number; // 0 or 1
 }
 
 const db = new Dexie("Inventory") as Dexie & {
   inventory: EntityTable<Inventory, "id">;
 };
 
-db.version(2).stores({
-  inventory: "++id, &[directory+name], name, registrationDate, expirationDate",
+db.version(5).stores({
+  inventory:
+    "++id, isFolder, &[directory+name], name, registrationDate, expirationDate",
 });
 
 export type { Inventory };

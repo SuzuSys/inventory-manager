@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { db } from "@/db";
+import { liveQuery } from "dexie";
 
 interface Item {
   name: string;
@@ -8,9 +9,8 @@ interface Item {
   registration: string;
 }
 
-async function getAll() {
+async function getAll(): Promise<Item[]> {
   const raw = await db.inventory.toArray();
-  console.log(raw);
   return raw.map((inv) => ({
     name: inv.name,
     directory: inv.directory,
@@ -19,10 +19,18 @@ async function getAll() {
   }));
 }
 
-let items: Ref<Item[]> = ref([]);
-(async () => {
-  items.value = await getAll();
-})();
+const items: Ref<Item[]> = ref([]);
+
+const subscription = liveQuery(getAll).subscribe({
+  next: (result) => {
+    items.value = result;
+  },
+  error: (error) => console.log(error),
+});
+
+onUnmounted(() => {
+  subscription.unsubscribe();
+});
 </script>
 
 <template>
