@@ -10,6 +10,7 @@ interface Item {
 
 async function getAll() {
   const raw = await db.inventory.toArray();
+  console.log(raw);
   return raw.map((inv) => ({
     name: inv.name,
     directory: inv.directory,
@@ -18,9 +19,9 @@ async function getAll() {
   }));
 }
 
-let items: Item[] = [];
+let items: Ref<Item[]> = ref([]);
 (async () => {
-  items = await getAll();
+  items.value = await getAll();
 })();
 </script>
 
