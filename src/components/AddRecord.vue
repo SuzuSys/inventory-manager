@@ -4,11 +4,6 @@ import { useObservable } from "@/db/observable";
 import dayjs from "dayjs";
 
 const form = ref(null);
-
-computed(() => {
-  console.log(form.value);
-});
-
 const directory = ref("/");
 const directoryRules = {
   required: (v: string) => !!v || "Field is required.",
@@ -52,7 +47,7 @@ async function submit() {
     expiresAt: !!expiresAt.value
       ? dayjs(expiresAt.value, "YYYY/MM/DD", true).toDate()
       : new Date(0),
-    contentAddedAt: isContainable ? new Date() : new Date(0),
+    contentAddedAt: isContainable.value ? new Date() : new Date(0),
   });
 }
 </script>
@@ -117,7 +112,7 @@ async function submit() {
     </div>
     <div class="d-flex justify-end mb-6 align-center" height="100">
       <v-switch
-        :model-value="isContainable"
+        v-model="isContainable"
         color="primary"
         label="Containable"
         class="mr-6 mb-n5"
@@ -127,8 +122,9 @@ async function submit() {
         :color="form ? 'primary' : ''"
         :disabled="!form"
         @click="submit"
-        >Add</v-btn
       >
+        Add
+      </v-btn>
     </div>
   </v-form>
 </template>

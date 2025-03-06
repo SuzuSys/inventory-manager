@@ -11,7 +11,7 @@ function expirationFormat(d: Date): string {
 interface Item {
   name: string;
   directory: string;
-  expiration: string | undefined;
+  expiration: string;
   registration: string;
 }
 
