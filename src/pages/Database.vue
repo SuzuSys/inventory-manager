@@ -4,7 +4,7 @@ import { useObservable } from "@/db/observable";
 import dayjs from "dayjs";
 
 function expirationFormat(d: Date): string {
-  if (d === new Date(0)) return "-";
+  if (d.valueOf() === new Date(0).valueOf()) return "-";
   return dayjs(d).format("YYYY/MM/DD");
 }
 
