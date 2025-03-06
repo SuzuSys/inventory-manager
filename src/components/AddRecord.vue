@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { db } from "@/db";
 import { useObservable } from "@/db/observable";
+import { useDate } from "vuetify";
+
+const date = useDate();
 
 const name = ref("");
 const directory = ref("/");
@@ -12,10 +15,20 @@ const directoryItems: Ref<string[]> = useObservable(async () => {
   const folders = await db.inventory
     .where("contentAddedAt")
     .notEqual(new Date(0))
-    .reverse() // asc to desc
+    .reverse() // from asc to desc
     .toArray();
   return ["/", ...folders.map((inv) => `${inv.directory}${inv.name}/`)];
 });
+
+async function submit() {
+  await db.inventory.add({
+    directory: directory.value,
+    name: name.value,
+    registredAt: new Date(),
+    expiresAt: new Date(),
+    contentAddedAt: new Date(),
+  });
+}
 </script>
 
 <template>
@@ -34,7 +47,7 @@ const directoryItems: Ref<string[]> = useObservable(async () => {
         label="Containable"
         class="mr-6 mb-n5"
       ></v-switch>
-      <v-btn size="large" color="primary">Add</v-btn>
+      <v-btn size="large" color="primary" @click="submit">Add</v-btn>
     </div>
   </v-form>
 </template>
