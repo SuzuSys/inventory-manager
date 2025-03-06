@@ -3,6 +3,12 @@ import { db } from "@/db";
 import { useObservable } from "@/db/observable";
 import dayjs from "dayjs";
 
+const form = ref(null);
+
+computed(() => {
+  console.log(form.value);
+});
+
 const directory = ref("/");
 const directoryRules = {
   required: (v: string) => !!v || "Field is required.",
@@ -18,13 +24,9 @@ const expiresAtRules = {
   format: (v: string) =>
     !v || dayjs(v, "YYYY/MM/DD", true).isValid() || "Invalid input.",
 };
-const expiresAtDate = ref(new Date());
 const showCalendar = ref(false);
-
+const expiresAtDate = ref(new Date());
 const updatedDate = ref(new Date());
-function detectUpdateDate(d: Date) {
-  updatedDate.value = d;
-}
 function okCalendar() {
   expiresAtDate.value = updatedDate.value;
   expiresAt.value = dayjs(updatedDate.value).format("YYYY/MM/DD");
@@ -47,14 +49,16 @@ async function submit() {
     directory: directory.value,
     name: name.value,
     registredAt: new Date(),
-    expiresAt: new Date(),
-    contentAddedAt: new Date(),
+    expiresAt: !!expiresAt.value
+      ? dayjs(expiresAt.value, "YYYY/MM/DD", true).toDate()
+      : new Date(0),
+    contentAddedAt: isContainable ? new Date() : new Date(0),
   });
 }
 </script>
 
 <template>
-  <v-form ref="form">
+  <v-form v-model="form">
     <v-autocomplete
       v-model="directory"
       label="Directory"
@@ -88,7 +92,7 @@ async function submit() {
           <v-date-picker
             show-adjacent-months
             v-model="expiresAtDate"
-            @update:model-value="detectUpdateDate"
+            @update:model-value="(d) => (updatedDate = d)"
           >
             <template v-slot:header="">
               <p class="text-center text-h5">
@@ -118,7 +122,13 @@ async function submit() {
         label="Containable"
         class="mr-6 mb-n5"
       ></v-switch>
-      <v-btn size="large" color="primary" @click="submit">Add</v-btn>
+      <v-btn
+        size="large"
+        :color="form ? 'primary' : ''"
+        :disabled="!form"
+        @click="submit"
+        >Add</v-btn
+      >
     </div>
   </v-form>
 </template>
