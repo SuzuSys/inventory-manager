@@ -3,10 +3,21 @@ import { db } from "@/db";
 import { useObservable } from "@/db/observable";
 import dayjs from "dayjs";
 
-const name = ref("");
 const directory = ref("/");
+const directoryRules = {
+  required: (v: string) => !!v || "Field is required.",
+};
+const name = ref("");
+const nameRules = {
+  required: (v: string) => !!v || "Field is required.",
+  format: (v: string) => !/\//.test(v) || `Slashes ("/") are not allowed.`,
+};
 const isContainable = ref(false);
 const expiresAt = ref("");
+const expiresAtRules = {
+  format: (v: string) =>
+    !v || dayjs(v, "YYYY/MM/DD", true).isValid() || "Invalid input.",
+};
 const expiresAtDate = ref(new Date());
 const showCalendar = ref(false);
 
@@ -48,8 +59,14 @@ async function submit() {
       v-model="directory"
       label="Directory"
       :items="directoryItems"
+      :rules="[directoryRules.required]"
     ></v-autocomplete>
-    <v-text-field v-model="name" label="Name" required></v-text-field>
+    <v-text-field
+      v-model="name"
+      label="Name"
+      required
+      :rules="[nameRules.required, nameRules.format]"
+    ></v-text-field>
     <div class="d-flex justify-start">
       <v-text-field
         class="mr-2"
@@ -57,6 +74,7 @@ async function submit() {
         label="Expires at"
         placeholder="YYYY/MM/DD"
         persistent-placeholder
+        :rules="[expiresAtRules.format]"
       ></v-text-field>
       <v-btn
         icon="mdi-calendar"
