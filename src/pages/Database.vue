@@ -1,13 +1,11 @@
 <script lang="ts" setup>
 import { db } from "@/db";
 import { useObservable } from "@/db/observable";
-import { useDate } from "vuetify";
-
-const date = useDate();
+import dayjs from "dayjs";
 
 function expirationFormat(d: Date): string {
   if (d === new Date(0)) return "-";
-  return date.format(d, "keyboardDateTime");
+  return dayjs(d).format("YYYY/MM/DD");
 }
 
 interface Item {
@@ -23,7 +21,7 @@ const items: Ref<Item[]> = useObservable(async () => {
     name: inv.name,
     directory: inv.directory,
     expiration: expirationFormat(inv.expiresAt),
-    registration: date.format(inv.registredAt, "keyboardDateTime24h"),
+    registration: dayjs(inv.registredAt).format("YYYY/MM/DD"),
   }));
 });
 </script>

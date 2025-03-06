@@ -10,10 +10,14 @@ import "vuetify/styles";
 
 // Composables
 import { createVuetify } from "vuetify";
-import DateFnsAdapter from "@date-io/date-fns";
+import { VDateInput } from "vuetify/labs/VDateInput";
+import DayJsAdapter from "@date-io/dayjs";
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
+  components: {
+    VDateInput,
+  },
   theme: {
     defaultTheme: "dark",
   },
@@ -21,12 +25,12 @@ export default createVuetify({
     locale: "en",
   },
   date: {
-    adapter: DateFnsAdapter,
+    adapter: DayJsAdapter,
   },
 });
 
 declare module "vuetify" {
   namespace DateModule {
-    interface Adapter extends DateFnsAdapter {}
+    interface Adapter extends DayJsAdapter {}
   }
 }

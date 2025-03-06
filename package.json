@@ -13,9 +13,11 @@
   },
   "dependencies": {
     "@date-io/date-fns": "^3.2.0",
+    "@date-io/dayjs": "^3.2.0",
     "@mdi/font": "7.4.47",
     "core-js": "^3.37.1",
     "date-fns": "^3.6.0",
+    "dayjs": "^1.11.13",
     "dexie": "^4.0.11",
     "roboto-fontface": "*",
     "vue": "^3.4.31",
