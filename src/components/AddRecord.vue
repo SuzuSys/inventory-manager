@@ -3,7 +3,7 @@ import { db } from "@/db";
 import { useObservable } from "@/db/observable";
 import dayjs from "dayjs";
 
-const form = ref(null);
+const form: Ref<true | false | null> = ref(null);
 const directory = ref("/");
 const directoryRules = {
   required: (v: string) => !!v || "Field is required.",
@@ -53,7 +53,7 @@ async function submit() {
 </script>
 
 <template>
-  <v-form v-model="form">
+  <v-form validate-on="input" @submit.prevent="submit" v-model="form">
     <v-autocomplete
       v-model="directory"
       label="Directory"
@@ -121,7 +121,7 @@ async function submit() {
         size="large"
         :color="form ? 'primary' : ''"
         :disabled="!form"
-        @click="submit"
+        type="submit"
       >
         Add
       </v-btn>
