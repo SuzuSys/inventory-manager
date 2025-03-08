@@ -30,7 +30,7 @@ export async function getItemRecord(): Promise<ItemRecord[]> {
     name: inv.name,
     directory: inv.directory,
     expiresAt: expiresAtFormat(inv.expiresAt),
-    containable: inv.contentAddedAt.valueOf() === new Date(0).valueOf(),
+    containable: inv.contentAddedAt.valueOf() !== new Date(0).valueOf(),
     registeredAt: dayjs(inv.registeredAt).format("YYYY/MM/DD HH:mm:ss"),
   }));
 }
