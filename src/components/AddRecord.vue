@@ -4,6 +4,7 @@ import { useObservable } from "@/db/observable";
 import dayjs from "dayjs";
 
 const form: Ref<true | false | null> = ref(null);
+const snackbar = ref(false);
 const directory = ref("/");
 const directoryRules = {
   required: (v: string) => !!v || "Field is required.",
@@ -49,6 +50,7 @@ async function submit() {
       : new Date(0),
     contentAddedAt: isContainable.value ? new Date() : new Date(0),
   });
+  snackbar.value = true;
 }
 </script>
 
@@ -119,12 +121,20 @@ async function submit() {
       ></v-switch>
       <v-btn
         size="large"
-        :color="form ? 'primary' : ''"
-        :disabled="!form"
+        :color="form && !snackbar ? 'primary' : ''"
+        :disabled="!form || snackbar"
         type="submit"
       >
         Add
       </v-btn>
     </div>
   </v-form>
+  <v-snackbar
+    :timeout="2000"
+    color="success"
+    variant="tonal"
+    v-model="snackbar"
+  >
+    The record has been added.
+  </v-snackbar>
 </template>
