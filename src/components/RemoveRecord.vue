@@ -45,7 +45,7 @@ async function okRemove() {
   <v-snackbar
     :timeout="2000"
     color="success"
-    variant="tonal"
+    class="elevation-24"
     v-model="snackbar"
   >
     The record has been removed.

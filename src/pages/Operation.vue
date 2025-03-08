@@ -19,7 +19,9 @@ async function deleteAllRecords() {
       <v-tabs-window-item :value="'add'">
         <add-record></add-record>
       </v-tabs-window-item>
-      <v-tabs-window-item :value="'update'"> update </v-tabs-window-item>
+      <v-tabs-window-item :value="'update'">
+        <update-record></update-record>
+      </v-tabs-window-item>
       <v-tabs-window-item :value="'others'">
         <v-row justify="center" class="my-5">
           <v-col cols="auto">

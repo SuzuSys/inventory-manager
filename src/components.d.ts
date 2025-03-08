@@ -14,5 +14,6 @@ declare module 'vue' {
     RemoveRecord: typeof import('./components/RemoveRecord.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    UpdateRecord: typeof import('./components/UpdateRecord.vue')['default']
   }
 }
