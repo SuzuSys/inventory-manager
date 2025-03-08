@@ -43,7 +43,7 @@ async function submit() {
   await db.inventory.add({
     directory: directory.value,
     name: name.value,
-    registredAt: new Date(),
+    registeredAt: new Date(),
     expiresAt: !!expiresAt.value
       ? dayjs(expiresAt.value, "YYYY/MM/DD", true).toDate()
       : new Date(0),

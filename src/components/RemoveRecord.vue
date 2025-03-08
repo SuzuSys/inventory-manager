@@ -1,19 +1,37 @@
 <script lang="ts" setup>
-const display = defineModel<boolean>();
+import { recordHeaderMap, type ItemRecord } from "@/db/visible";
+import { db } from "@/db";
 
-function okRemove() {
-  display.value = false;
+const modelDisplay = defineModel<boolean>();
+const { propsItem } = defineProps<{ propsItem: ItemRecord | undefined }>();
+const snackbar = ref(false);
+
+async function okRemove() {
+  modelDisplay.value = false;
+  if (propsItem) {
+    await db.inventory.delete(propsItem.id);
+    snackbar.value = true;
+  }
 }
 </script>
 
 <template>
-  <v-dialog v-model="display" max-width="500">
+  <v-dialog v-model="modelDisplay">
     <v-card class="mx-auto" :border="true" title="Remove this record?">
-      HEYHEYHEY!
+      <v-container>
+        <v-table v-if="propsItem" class="mt-0">
+          <tbody>
+            <tr v-for="(value, key) in recordHeaderMap">
+              <td>{{ value }}</td>
+              <td>{{ propsItem[key] }}</td>
+            </tr>
+          </tbody>
+        </v-table>
+      </v-container>
       <v-container>
         <v-row>
           <v-col cols="6">
-            <v-btn block variant="text" @click="display = false">
+            <v-btn block variant="text" @click="modelDisplay = false">
               cancel
             </v-btn>
           </v-col>
@@ -24,4 +42,12 @@ function okRemove() {
       </v-container>
     </v-card>
   </v-dialog>
+  <v-snackbar
+    :timeout="2000"
+    color="success"
+    variant="tonal"
+    v-model="snackbar"
+  >
+    The record has been removed.
+  </v-snackbar>
 </template>

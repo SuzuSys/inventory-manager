@@ -1,51 +1,32 @@
 <script lang="ts" setup>
 import RemoveRecord from "@/components/RemoveRecord.vue";
 import { useVMainHeight } from "@/composables/useVMainHeight";
-import { db } from "@/db";
 import { useObservable } from "@/db/observable";
-import dayjs from "dayjs";
+import { getItemRecord, recordHeaderMap, type ItemRecord } from "@/db/visible";
 
 const vmainHeight = useVMainHeight();
 
-function expirationFormat(d: Date): string {
-  if (d.valueOf() === new Date(0).valueOf()) return "-";
-  return dayjs(d).format("YYYY/MM/DD");
-}
+const removeDialog: Ref<boolean> = ref(false);
+const removeItem: Ref<ItemRecord | undefined> = ref();
 
-const removeDialog = ref(false);
-
-interface Item {
-  id: number;
-  name: string;
-  directory: string;
-  expiration: string;
-  registration: string;
-}
+const recordHeaders = Object.entries(recordHeaderMap).map(([key, title]) => ({
+  title,
+  key,
+}));
 
 const headers = [
-  { title: "Name", key: "name" },
-  { title: "Directory", key: "directory" },
-  { title: "Expiration", key: "expiration" },
-  { title: "Registration", key: "registration" },
+  ...recordHeaders,
   { title: "Actions", key: "actions", sortable: false },
 ];
 
-const items: Ref<Item[]> = useObservable(async () => {
-  const raw = await db.inventory.toArray();
-  return raw.map((inv) => ({
-    id: inv.id,
-    name: inv.name,
-    directory: inv.directory,
-    expiration: expirationFormat(inv.expiresAt),
-    registration: dayjs(inv.registredAt).format("YYYY/MM/DD HH:mm:ss"),
-  }));
-});
+const items: Ref<ItemRecord[]> = useObservable(getItemRecord);
 
 function edit(id: number) {
   console.log(id);
 }
-function remove(id: number) {
+function remove(item: ItemRecord) {
   removeDialog.value = true;
+  removeItem.value = item;
 }
 </script>
 
@@ -68,10 +49,10 @@ function remove(id: number) {
           color="medium-emphasis"
           icon="mdi-delete"
           size="small"
-          @click="remove(item.id)"
+          @click="remove(item)"
         ></v-icon>
       </div>
     </template>
   </v-data-table-virtual>
-  <RemoveRecord v-model="removeDialog"></RemoveRecord>
+  <RemoveRecord v-model="removeDialog" :props-item="removeItem"></RemoveRecord>
 </template>
