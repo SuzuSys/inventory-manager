@@ -13,9 +13,9 @@ const db = new Dexie("Inventory") as Dexie & {
   inventory: EntityTable<Inventory, "id">;
 };
 
-db.version(7).stores({
+db.version(8).stores({
   inventory:
-    "++id, &[directory+name], name, expiresAt, contentAddedAt, registeredAt",
+    "++id, [directory+name], name, expiresAt, contentAddedAt, registeredAt",
 });
 
 export type { Inventory };
