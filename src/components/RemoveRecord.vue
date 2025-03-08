@@ -1,9 +1,12 @@
 <script lang="ts" setup>
 import { recordHeaderMap, type ItemRecord } from "@/db/visible";
 import { db } from "@/db";
+import { useUpdateRecordStore } from "@/stores/updateRecordStore";
 
 const modelDisplay = defineModel<boolean>();
 const { propsItem } = defineProps<{ propsItem: ItemRecord | undefined }>();
+const updateRecordStore = useUpdateRecordStore();
+
 const snackbar = ref(false);
 
 async function okRemove() {
@@ -11,6 +14,9 @@ async function okRemove() {
   if (propsItem) {
     await db.inventory.delete(propsItem.id);
     snackbar.value = true;
+    if (updateRecordStore.item?.id === propsItem.id) {
+      updateRecordStore.item = undefined;
+    }
   }
 }
 </script>
